@@ -1,5 +1,7 @@
 package com.jack.authserver.config;
 
+import com.jack.authserver.security.FederatedIdentityConfigurer;
+import com.jack.authserver.security.UserRepositoryOAuth2UserHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -22,10 +24,17 @@ public class DefaultSecurityConfig {
     @Bean
     @Order(2)
     public SecurityFilterChain defaultSecurityFilterChain(HttpSecurity http) throws Exception {
+        FederatedIdentityConfigurer federatedIdentityConfigurer = new FederatedIdentityConfigurer()
+                .oauth2UserHandler(new UserRepositoryOAuth2UserHandler());
+
         http
-                .authorizeHttpRequests(authorize -> authorize.anyRequest().authenticated())
+                .authorizeHttpRequests(authorize ->
+                        authorize
+                                .requestMatchers("/assets/**", "/webjars/**", "/login").permitAll()
+                                .anyRequest().authenticated())
                 // Form login handles the redirect to the login page from the authorization server filter chain
-                .formLogin(Customizer.withDefaults());
+                .formLogin(Customizer.withDefaults())
+                .apply(federatedIdentityConfigurer);
 
         return http.build();
     }

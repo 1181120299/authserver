@@ -1,0 +1,24 @@
+server:
+  port: 9000
+spring:
+  security:
+    oauth2:
+      client:
+        provider:
+          github:
+            user-name-attribute: login
+        registration:
+          github-idp:
+            provider: github
+            client-id: 0da60a3631064d7d3756
+            client-secret: a4bd3c19ef06b6c3fef76afb6f0270cf83bf7f74
+            scope:
+              - user:email
+              - read:user
+            client-name: Github sign in
+logging:
+  level:
+    root: info
+    org.springframework.web: info
+    org.springframework.security: info
+    org.springframework.security.oauth2: info
