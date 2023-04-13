@@ -40,7 +40,6 @@ public class FederatedIdentityAuthenticationEntryPoint implements Authentication
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
         String idp = request.getParameter("idp");
-        System.out.println("===>idp = " + idp);
         if (idp != null) {
             ClientRegistration clientRegistration = this.clientRegistrationRepository.findByRegistrationId(idp);
             if (clientRegistration != null) {
