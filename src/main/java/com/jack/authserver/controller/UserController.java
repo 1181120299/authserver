@@ -2,6 +2,7 @@ package com.jack.authserver.controller;
 
 import jakarta.annotation.Resource;
 import org.springframework.beans.BeanUtils;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.validation.annotation.Validated;
 import javax.validation.constraints.NotNull;
@@ -17,6 +18,8 @@ import com.jack.authserver.dto.UserDto;
 import com.jack.authserver.service.UserService;
 
 import com.jack.utils.web.R;
+
+import java.util.List;
 
 /**
  * 用户信息（定义业务系统需要的用户信息）
