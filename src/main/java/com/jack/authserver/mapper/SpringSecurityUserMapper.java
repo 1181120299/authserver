@@ -2,7 +2,6 @@ package com.jack.authserver.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import com.jack.authserver.entity.SpringSecurityUser;
-import com.jack.authserver.entity.User;
 import org.apache.ibatis.annotations.Mapper;
 
 /**

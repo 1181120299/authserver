@@ -2,7 +2,6 @@ package com.jack.authserver.service;
 
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.jack.authserver.entity.SpringSecurityUser;
-import com.jack.authserver.entity.User;
 
 /**
  * Spring Security 需要的用户信息

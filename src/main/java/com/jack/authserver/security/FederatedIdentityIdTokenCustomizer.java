@@ -1,12 +1,8 @@
 package com.jack.authserver.security;
 
-import jakarta.annotation.Resource;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.security.oauth2.core.oidc.IdTokenClaimNames;
 import org.springframework.security.oauth2.core.oidc.OidcIdToken;
-import org.springframework.security.oauth2.core.oidc.OidcUserInfo;
 import org.springframework.security.oauth2.core.oidc.endpoint.OidcParameterNames;
 import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -20,9 +16,6 @@ import java.util.*;
  * {@code id_token} produced by this authorization server.
  */
 public class FederatedIdentityIdTokenCustomizer implements OAuth2TokenCustomizer<JwtEncodingContext> {
-
-    @Resource
-    private UserInfoService userInfoService;
 
     private static final Set<String> ID_TOKEN_CLAIMS = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(
             IdTokenClaimNames.ISS,
@@ -50,20 +43,6 @@ public class FederatedIdentityIdTokenCustomizer implements OAuth2TokenCustomizer
                 // Remove standard id_token claims that could cause problems with clients
                 ID_TOKEN_CLAIMS.forEach(thirdPartyClaims::remove);
             });
-
-            // If user from local, load userinfo from database, set userinfo property to claim
-            if (context.getPrincipal() instanceof UsernamePasswordAuthenticationToken) {
-                OidcUserInfo userInfo = userInfoService.loadUser(context.getPrincipal().getName());
-                if (userInfo != null) {
-                    Map<String, Object> userClaimMap = new HashMap<>(userInfo.getClaims());
-                    context.getClaims().claims(existingClaims -> {
-                        existingClaims.keySet().forEach(userClaimMap::remove);
-                        ID_TOKEN_CLAIMS.forEach(userClaimMap::remove);
-                    });
-
-                    context.getClaims().claims(claims -> claims.putAll(userClaimMap));
-                }
-            }
         }
     }
 
