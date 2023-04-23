@@ -42,7 +42,7 @@ public class Oauth2RegisteredClientController {
 	 * 返回列表页
 	 */
 	@GetMapping("/page")
-	public String list(Model model,
+	public String page(Model model,
 					   @RequestParam(required = false, defaultValue = "1") Integer current,
 					   @RequestParam(required = false, defaultValue = "10") Integer size) {
 		IPage<Oauth2RegisteredClient> page = new Page<>(current, size);

@@ -1,17 +1,18 @@
 package com.jack.authserver.entity;
 
+import lombok.*;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
-import lombok.*;
+import com.baomidou.mybatisplus.annotation.IdType;
 
-import java.io.Serializable;
+import java.util.Date;
 
 /**
- * Spring Security 需要的用户信息
+ * 用户-权限
  * 
  * @author chenjiabao
  * @email 1181120299@qq.com
- * @date 2023-04-15 11:12:17
+ * @date 2023-04-23 18:42:48
  */
 @Data
 @EqualsAndHashCode
@@ -19,23 +20,18 @@ import java.io.Serializable;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@TableName("users")
-public class SpringSecurityUser implements Serializable {
+@TableName("authorities")
+public class Authorities {
 	
 	/**
 	* 用户名
 	*/
-	@TableId(value = "username")
+	@TableId(value = "username", type = IdType.ASSIGN_UUID)
 	private String username;
 
 	/**
-	* 密码
+	* 权限
 	*/
-	private String password;
-
-	/**
-	* 是否启用。true: 启用
-	*/
-	private Boolean enabled;
+	private String authority;
 
 }
