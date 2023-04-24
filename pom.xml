@@ -113,7 +113,7 @@
         <dependency>
             <groupId>com.jack</groupId>
             <artifactId>utils</artifactId>
-            <version>1.0.0</version>
+            <version>1.0.2</version>
         </dependency>
 
         <!--springboot2.7版本后，spring-boot-starter-web不再包含hibernate-validator，需要手动引入-->
@@ -125,6 +125,11 @@
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-amqp</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
         </dependency>
     </dependencies>
 

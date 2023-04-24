@@ -17,8 +17,12 @@
         <button class="btn btn-primary btn-lg btn-block" type="button" onclick="submitForm()">保存</button>
     </form>
 </div>
+<a id="ctx" style="display: none" th:href="@{/}"></a>
 <script src="/webjars/jquery/jquery.min.js" th:src="@{/webjars/jquery/jquery.min.js}"></script>
 <script>
+    var ctx = $('#ctx').attr("href");
+    console.log("ctx = ", ctx);
+
     function submitForm() {
         const param = {};
         $($('#clientForm').serializeArray()).each(function () {
@@ -29,7 +33,7 @@
         console.info(param);
         $.ajax({
             type: "POST",
-            url: "/oauth2registeredclient/save",
+            url: ctx + "oauth2registeredclient/save",
             data: JSON.stringify(param),
             async: false,
             dataType: "json",
@@ -39,9 +43,9 @@
             },
             success: function (data) {
                 console.info(data);
-                alert(data.retMsg);
-                if (data.retCode === 2000) {
-                    location.href = "/oauth2registeredclient/page"
+                alert(data.fixedMsg);
+                if (data.fixedCode === 200) {
+                    location.href = ctx + "oauth2registeredclient/page"
                 }
             }
         });
@@ -58,14 +62,14 @@
 
         $.ajax({
             type: "GET",
-            url: "/oauth2registeredclient/checkClientId?clientId=" + clientId,
+            url: ctx + "oauth2registeredclient/checkClientId?clientId=" + clientId,
             success: function (data) {
                 // do something
                 console.debug(data);
-                if (data.retCode === 2000) {
-                    $("#clientTip").text(data.retMsg).css("color", "green");
+                if (data.fixedCode === 200) {
+                    $("#clientTip").text(data.fixedMsg).css("color", "green");
                 } else {
-                    $("#clientTip").text(data.retMsg).css("color", "red");
+                    $("#clientTip").text(data.fixedMsg).css("color", "red");
                 }
             }
         })

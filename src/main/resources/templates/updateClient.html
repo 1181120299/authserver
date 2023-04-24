@@ -19,8 +19,12 @@
         <button class="btn btn-primary btn-lg btn-block" type="button" onclick="submitForm()">保存</button>
     </form>
 </div>
+<a id="ctx" style="display: none" th:href="@{/}"></a>
 <script src="/webjars/jquery/jquery.min.js" th:src="@{/webjars/jquery/jquery.min.js}"></script>
 <script>
+    var ctx = $('#ctx').attr("href");
+    console.log("ctx = ", ctx);
+
     function submitForm() {
         const param = {};
         $($('#clientForm').serializeArray()).each(function () {
@@ -30,7 +34,7 @@
         console.info(param);
         $.ajax({
             type: "POST",
-            url: "/oauth2registeredclient/update",
+            url: ctx + "oauth2registeredclient/update",
             data: JSON.stringify(param),
             async: false,
             dataType: "json",
@@ -40,8 +44,8 @@
             },
             success: function (data) {
                 console.info(data);
-                alert(data.retMsg);
-                location.href = "/oauth2registeredclient/page"
+                alert(data.fixedMsg);
+                location.href = ctx + "oauth2registeredclient/page"
             }
         });
     }

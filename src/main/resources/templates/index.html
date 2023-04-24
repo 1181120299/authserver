@@ -121,8 +121,12 @@
         </div>
     </div>
 </div>
+<a id="ctx" style="display: none" th:href="@{/}"></a>
 <script src="/webjars/jquery/jquery.min.js" th:src="@{/webjars/jquery/jquery.min.js}"></script>
 <script>
+    var ctx = $('#ctx').attr("href");
+    console.log("ctx = ", ctx);
+
     function delClient(id, obj) {
         var clientId = $($(obj).parent().parent().children("td")[1]).text();
         console.info(clientId);
@@ -134,14 +138,14 @@
         console.info(currentPage);
         $.ajax({
             type: "GET",
-            url: "/oauth2registeredclient/delete?id=" + id,
+            url: ctx + "oauth2registeredclient/delete?id=" + id,
             async: false,
             error: function () {
                 alert("删除失败");
             },
             success: function (data) {
-                alert(data.retMsg);
-                location.href = "/oauth2registeredclient/page?current=" + currentPage;
+                alert(data.fixedMsg);
+                location.href = ctx + "oauth2registeredclient/page?current=" + currentPage;
             }
         });
     }
