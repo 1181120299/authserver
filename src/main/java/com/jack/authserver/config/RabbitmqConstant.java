@@ -5,20 +5,20 @@ package com.jack.authserver.config;
  */
 public enum RabbitmqConstant {
     /**
-    * 新增自定义用户相关的队列等信息
-    */
-     CUSTOM_USER_ADD(
-            "jack-custom-addUser-queue",
-            "jack-custom-addUser-exchange",
-            "jack-custom-addUser-routeKey"
+     * 自定义用户相关的队列等信息
+     */
+    CUSTOM_USER(
+            "jack-custom-user-queue",
+            "jack-custom-user-exchange",
+            "jack-custom-user-routeKey"
     ),
     /**
-     * 删除自定义用户相关的队列等信息
+     * 认证授权中心用户相关的队列等信息
      */
-    CUSTOM_USER_DELETE(
-            "jack-custom-deleteUser-queue",
-            "jack-custom-deleteUser-exchange",
-            "jack-custom-deleteUser-routeKey"
+    SPRING_SECURITY_USER(
+            "jack-spring-user-queue",
+            "jack-spring-user-exchange",
+            "jack-spring-user-routeKey"
     ),
     /**
      * 死信相关的队列等信息
