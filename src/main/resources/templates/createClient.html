@@ -11,7 +11,7 @@
 <div style="width:400px;height:100%;margin-left:450px;margin-top:100px;">
     <form id="clientForm">
         应用名称<span style="color: red">*</span>：<span id="clientTip"></span><input class="form-control"  type="text" name="clientId" oninput="checkClientId(this)" placeholder="请输入英文" autocomplete="off"><br>
-        回调应用地址<span style="color: red">*</span>：<input class="form-control" type="text" name="redirectUriSimple" placeholder="多个以英文逗号分割" autocomplete="off"><br>
+        回调应用地址<span style="color: red">*</span>：<input class="form-control" type="text" name="redirectUriSimple" placeholder="示例：http://192.168.0.1:8080/bookClient" autocomplete="off"><br>
         描 述：<input class="form-control" type="text"  name="description" autocomplete="off"><br>
         <!--<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">-->
         <button class="btn btn-primary btn-lg btn-block" type="button" onclick="submitForm()">保存</button>
