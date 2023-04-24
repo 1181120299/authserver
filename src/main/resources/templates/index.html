@@ -32,7 +32,7 @@
             <th style="text-align:center">应用名称</th>
             <th style="text-align:center">应用描述</th>
             <th style="text-align:center">秘钥</th>
-            <th style="text-align:center">回调地址</th>
+            <th style="text-align:center">回调应用地址</th>
             <th style="text-align:center">操作</th>
         </tr>
         </thead>
@@ -44,7 +44,7 @@
             <td style="vertical-align: middle!important;" th:text="${client.clientId}"></td>
             <td style="vertical-align: middle!important;" th:text="${client.description}"></td>
             <td style="vertical-align: middle!important;" th:text="${client.clientSecret}"></td>
-            <td style="vertical-align: middle!important;" th:text="${client.redirectUris}"></td>
+            <td style="vertical-align: middle!important;" th:text="${client.redirectUriSimple}"></td>
             <td>
                 <!--         a标签用来定义超链接 href表示超链接-->
                 <a class="btn btn-primary" th:href="@{'/oauth2registeredclient/toUpdate/'+${client.id}}">更改</a>

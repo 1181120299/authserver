@@ -30,8 +30,13 @@ public class Oauth2RegisteredClientDto {
 	/**
 	* 重定向地址，多个以英文逗号分割
 	*/
-	@Length(max = 1000, message = "重定向地址，多个以英文逗号分割最多1000个字符")
 	private String redirectUris;
+
+	/**
+	 * 重定向应用地址。例如http://localhost:8080/application
+	 */
+	@Length(max = 1000, message = "重定向应用地址最多1000个字符")
+	private String redirectUriSimple;
 
 	/**
 	* 客户端描述

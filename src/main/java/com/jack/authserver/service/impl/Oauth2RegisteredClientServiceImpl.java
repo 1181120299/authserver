@@ -10,6 +10,7 @@ import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.jack.authserver.mapper.Oauth2RegisteredClientMapper;
 import com.jack.authserver.entity.Oauth2RegisteredClient;
 import com.jack.authserver.service.Oauth2RegisteredClientService;
+import org.springframework.util.StringUtils;
 
 import java.util.Date;
 import java.util.UUID;
@@ -26,6 +27,7 @@ public class Oauth2RegisteredClientServiceImpl extends ServiceImpl<Oauth2Registe
             throw new RRException("应用名称已存在");
         }
 
+        entity.setRedirectUris(generateRedirectUris(entity.getRedirectUriSimple()));
         entity.setClientIdIssuedAt(new Date());
         entity.setClientSecret("{noop}secret");
         entity.setClientName(UUID.randomUUID().toString());
@@ -38,6 +40,18 @@ public class Oauth2RegisteredClientServiceImpl extends ServiceImpl<Oauth2Registe
         return baseMapper.insert(entity) > 0;
     }
 
+    private String generateRedirectUris(String simple) {
+        if (!StringUtils.hasText(simple)) {
+            return simple;
+        }
+
+        if (!simple.endsWith("/")) {
+            simple += "/";
+        }
+
+        return simple + "authorized," + simple + "login/oauth2/code/jack-client-oidc";
+    }
+
     @Override
     public boolean updateById(Oauth2RegisteredClient entity) {
         entity.setClientId(null);
@@ -47,6 +61,7 @@ public class Oauth2RegisteredClientServiceImpl extends ServiceImpl<Oauth2Registe
             entity.setClientSecret(clientSecret);
         }
 
+        entity.setRedirectUris(generateRedirectUris(entity.getRedirectUriSimple()));
         return baseMapper.updateById(entity) > 0;
     }
 }

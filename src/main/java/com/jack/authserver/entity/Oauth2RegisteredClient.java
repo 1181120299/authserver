@@ -5,6 +5,7 @@ import lombok.*;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.baomidou.mybatisplus.annotation.IdType;
+import org.hibernate.validator.constraints.Length;
 
 import java.util.Date;
 
@@ -71,6 +72,11 @@ public class Oauth2RegisteredClient {
 	* 重定向地址，多个以英文逗号分割
 	*/
 	private String redirectUris;
+
+	/**
+	 * 重定向应用地址。例如http://localhost:8080/application
+	 */
+	private String redirectUriSimple;
 
 	/**
 	* 授予的作用域
