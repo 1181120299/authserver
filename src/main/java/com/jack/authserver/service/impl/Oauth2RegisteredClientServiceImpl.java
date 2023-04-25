@@ -6,14 +6,47 @@ import com.jack.authserver.entity.Oauth2RegisteredClient;
 import com.jack.authserver.mapper.Oauth2RegisteredClientMapper;
 import com.jack.authserver.service.Oauth2RegisteredClientService;
 import com.jack.utils.web.RRException;
+import jakarta.annotation.PostConstruct;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.Date;
+import java.util.List;
 import java.util.UUID;
 
 @Slf4j
 public class Oauth2RegisteredClientServiceImpl extends ServiceImpl<Oauth2RegisteredClientMapper, Oauth2RegisteredClient> implements Oauth2RegisteredClientService {
+
+    /**
+     * OAuth client是否需要授权确认页面。
+     */
+    private static final boolean requireAuthorizationConsent = false;
+
+    @PostConstruct
+    public void init() {
+        List<Oauth2RegisteredClient> registeredClientList = baseMapper.selectList(new LambdaQueryWrapper<Oauth2RegisteredClient>()
+                .select(Oauth2RegisteredClient::getId));
+        if (CollectionUtils.isNotEmpty(registeredClientList)) {
+            return;
+        }
+
+        log.info("Init one client for resource server.");
+        Oauth2RegisteredClient entity = new Oauth2RegisteredClient();
+        entity.setClientId("resource-server");
+        entity.setRedirectUriSimple("http://192.168.1.101:9001");
+        entity.setRedirectUris(generateRedirectUris(entity.getRedirectUriSimple()));
+        entity.setClientIdIssuedAt(new Date());
+        entity.setClientSecret("{noop}secret");
+        entity.setClientName(UUID.randomUUID().toString());
+        entity.setClientAuthenticationMethods("client_secret_basic");
+        entity.setAuthorizationGrantTypes("refresh_token,client_credentials,authorization_code");
+        entity.setScopes("openid,profile,message.read,message.write");
+        entity.setClientSettings("{\"@class\":\"java.util.Collections$UnmodifiableMap\",\"settings.client.require-proof-key\":false,\"settings.client.require-authorization-consent\":" + requireAuthorizationConsent + "}");
+        entity.setTokenSettings("{\"@class\":\"java.util.Collections$UnmodifiableMap\",\"settings.token.reuse-refresh-tokens\":true,\"settings.token.id-token-signature-algorithm\":[\"org.springframework.security.oauth2.jose.jws.SignatureAlgorithm\",\"RS256\"],\"settings.token.access-token-time-to-live\":[\"java.time.Duration\",300.000000000],\"settings.token.access-token-format\":{\"@class\":\"org.springframework.security.oauth2.server.authorization.settings.OAuth2TokenFormat\",\"value\":\"self-contained\"},\"settings.token.refresh-token-time-to-live\":[\"java.time.Duration\",3600.000000000],\"settings.token.authorization-code-time-to-live\":[\"java.time.Duration\",300.000000000]}");
+        entity.setDescription("资源服务器");
+        baseMapper.insert(entity);
+    }
 
     @Override
     public boolean save(Oauth2RegisteredClient entity) {
@@ -23,7 +56,7 @@ public class Oauth2RegisteredClientServiceImpl extends ServiceImpl<Oauth2Registe
             throw new RRException("应用名称已存在");
         }
 
-        boolean requireAuthorizationConsent = false;
+
         entity.setRedirectUris(generateRedirectUris(entity.getRedirectUriSimple()));
         entity.setClientIdIssuedAt(new Date());
         entity.setClientSecret("{noop}secret");
