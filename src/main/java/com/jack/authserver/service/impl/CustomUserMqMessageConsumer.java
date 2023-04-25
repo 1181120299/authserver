@@ -23,6 +23,11 @@ import org.springframework.util.Assert;
 @Slf4j
 public class CustomUserMqMessageConsumer {
 
+    /**
+     * 授权服务器内置的账号。不允许修改、删除。
+     */
+    public static final String EMBED_USERNAME = "jack";
+
     @Autowired
     private SpringSecurityUserMapper springSecurityUserMapper;
     @Autowired
@@ -56,6 +61,10 @@ public class CustomUserMqMessageConsumer {
 
     private void addUser(SpringSecurityUser user) {
         Assert.hasText(user.getPassword(), "password can not be empty");
+        if (EMBED_USERNAME.equals(user.getUsername())) {
+            log.error("username: {} already existed, and it is an embed account. You should not operate this account.", EMBED_USERNAME);
+            throw new IllegalArgumentException("Invalid username: " + EMBED_USERNAME);
+        }
 
         SpringSecurityUser existedUser = springSecurityUserMapper.selectOne(new LambdaQueryWrapper<SpringSecurityUser>()
                 .eq(SpringSecurityUser::getUsername, user.getUsername()));
@@ -76,6 +85,11 @@ public class CustomUserMqMessageConsumer {
     }
 
     private void deleteUser(String username) {
+        if (EMBED_USERNAME.equals(username)) {
+            log.error("username: {} already existed, and it is an embed account. You should not operate this account.", EMBED_USERNAME);
+            throw new IllegalArgumentException("Invalid username: " + EMBED_USERNAME);
+        }
+
         authoritiesMapper.delete(new LambdaQueryWrapper<Authorities>()
                 .eq(Authorities::getUsername, username));
         springSecurityUserMapper.deleteById(username);
@@ -90,6 +104,11 @@ public class CustomUserMqMessageConsumer {
     }
 
     private void updateUser(SpringSecurityUser user) {
+        if (EMBED_USERNAME.equals(user.getUsername())) {
+            log.error("username: {} already existed, and it is an embed account. You should not operate this account.", EMBED_USERNAME);
+            throw new IllegalArgumentException("Invalid username: " + EMBED_USERNAME);
+        }
+
         if (user.getPassword() != null || user.getEnabled() != null) {
             springSecurityUserMapper.updateById(user);
         }

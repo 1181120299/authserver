@@ -2,6 +2,7 @@ package com.jack.authserver.config;
 
 import com.jack.authserver.security.FederatedIdentityConfigurer;
 import com.jack.authserver.security.UserRepositoryOAuth2UserHandler;
+import com.jack.authserver.service.impl.CustomUserMqMessageConsumer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -51,7 +52,7 @@ public class DefaultSecurityConfig {
     @Bean
     public UserDetailsManager userDetailsManager(DataSource dataSource) {
         JdbcUserDetailsManager manager = new JdbcUserDetailsManager(dataSource);
-        String adminUsername = "jack";
+        String adminUsername = CustomUserMqMessageConsumer.EMBED_USERNAME;
         try {
             manager.loadUserByUsername(adminUsername);
         } catch (UsernameNotFoundException e) {
