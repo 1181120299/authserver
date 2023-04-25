@@ -1,22 +1,18 @@
 package com.jack.authserver.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.jack.authserver.entity.Oauth2RegisteredClient;
+import com.jack.authserver.mapper.Oauth2RegisteredClientMapper;
+import com.jack.authserver.service.Oauth2RegisteredClientService;
 import com.jack.utils.web.RRException;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Service;
-
-import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-
-import com.jack.authserver.mapper.Oauth2RegisteredClientMapper;
-import com.jack.authserver.entity.Oauth2RegisteredClient;
-import com.jack.authserver.service.Oauth2RegisteredClientService;
 import org.springframework.util.StringUtils;
 
 import java.util.Date;
 import java.util.UUID;
 
 @Slf4j
-@Service("oauth2RegisteredClientService")
 public class Oauth2RegisteredClientServiceImpl extends ServiceImpl<Oauth2RegisteredClientMapper, Oauth2RegisteredClient> implements Oauth2RegisteredClientService {
 
     @Override

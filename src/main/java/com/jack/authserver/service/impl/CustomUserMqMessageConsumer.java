@@ -12,7 +12,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
@@ -22,7 +21,6 @@ import org.springframework.util.Assert;
  * 资源服务器自定义用户信息，会发送RabbitMq消息。
  */
 @Slf4j
-@Component
 public class CustomUserMqMessageConsumer {
 
     @Autowired

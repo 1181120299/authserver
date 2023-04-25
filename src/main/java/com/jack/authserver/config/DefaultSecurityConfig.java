@@ -48,17 +48,6 @@ public class DefaultSecurityConfig {
         return http.build();
     }
 
-    /*@Bean
-    public UserDetailsService userDetailsService() {
-        UserDetails userDetails = User.withDefaultPasswordEncoder()
-                .username("jack")
-                .password("123456")
-                .roles("USER")
-                .build();
-
-        return new InMemoryUserDetailsManager(userDetails);
-    }*/
-
     @Bean
     public UserDetailsManager userDetailsManager(DataSource dataSource) {
         JdbcUserDetailsManager manager = new JdbcUserDetailsManager(dataSource);

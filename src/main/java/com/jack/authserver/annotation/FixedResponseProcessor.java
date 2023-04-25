@@ -13,7 +13,6 @@ import org.springframework.stereotype.Component;
  */
 @Slf4j
 @Aspect
-@Component
 public class FixedResponseProcessor {
 
     @Pointcut("execution(public com.jack.utils.web.R com.jack.authserver.controller..*.*(..))")

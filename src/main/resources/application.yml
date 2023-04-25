@@ -1,5 +1,3 @@
-server:
-  port: 9000
 spring:
   datasource:
     type: com.alibaba.druid.pool.DruidDataSource
@@ -7,28 +5,19 @@ spring:
     url: jdbc:mysql://127.0.0.1:3306/auth_server?useUnicode=true&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=GMT%2B8
     username: root
     password: test123456
-  security:
-    oauth2:
-      client:
-        provider:
-          github:
-            user-name-attribute: login
-        registration:
-          github-idp:
-            provider: github
-            client-id: 0da60a3631064d7d3756
-            client-secret: a4bd3c19ef06b6c3fef76afb6f0270cf83bf7f74
-            scope:
-              - user:email
-              - read:user
-            client-name: Github sign in
-logging:
-  level:
-    root: info
-    org.springframework.web: info
-    org.springframework.security: info
-    org.springframework.security.oauth2: info
-mybatis-plus:
-  mapper-locations: classpath:mapper/**/*.xml
-  configuration:
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
+#  security:
+#    oauth2:
+#      client:
+#        provider:
+#          github:
+#            user-name-attribute: login
+#        registration:
+#          github-idp:
+#            provider: github
+#            client-id: ${jack.oauth2.github.client-id:your id}
+#            client-secret: ${jack.oauth2.github.client-secret:your secret}
+#            scope:
+#              - user:email
+#              - read:user
+#            client-name: Github sign in

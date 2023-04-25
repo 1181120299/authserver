@@ -3,16 +3,18 @@ package com.jack.authserver.config;
 import com.baomidou.mybatisplus.annotation.DbType;
 import com.baomidou.mybatisplus.extension.plugins.MybatisPlusInterceptor;
 import com.baomidou.mybatisplus.extension.plugins.inner.PaginationInnerInterceptor;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-@Configuration      //表示这是一个配置类
+@Configuration
 public class MybatisPlusPageConfig {
 
     /**
      * 注册插件
      */
     @Bean   //表示此方法返回一个Bean实例
+    @ConditionalOnMissingBean(MybatisPlusInterceptor.class)
     public MybatisPlusInterceptor mybatisPlusInterceptor(){
         MybatisPlusInterceptor interceptor = new MybatisPlusInterceptor();
         //添加分页插件

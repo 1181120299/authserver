@@ -1,0 +1,22 @@
+{"groups": [
+  {
+    "name": "jack.oauth2.github",
+    "type": "",
+    "sourceType": ""
+  }
+],"properties": [
+  {
+    "name": "jack.oauth2.github.client-id",
+    "type": "java.lang.String",
+    "sourceType": "",
+    "description": "在github上注册的应用client-id.",
+    "defaultValue": ""
+  },
+  {
+    "name": "jack.oauth2.github.client-secret",
+    "type": "java.lang.String",
+    "sourceType": "",
+    "description": "在github上注册的应用client-secret.",
+    "defaultValue": ""
+  }
+]}

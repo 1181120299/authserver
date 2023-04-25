@@ -1,5 +1,7 @@
 package com.jack.authserver.security;
 
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.BeansException;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -10,6 +12,7 @@ import org.springframework.util.Assert;
 
 import java.util.function.Consumer;
 
+@Slf4j
 public class FederatedIdentityConfigurer extends AbstractHttpConfigurer<FederatedIdentityConfigurer, HttpSecurity> {
 
     private String loginPageUrl = "/login";
@@ -51,7 +54,13 @@ public class FederatedIdentityConfigurer extends AbstractHttpConfigurer<Federate
     @Override
     public void init(HttpSecurity http) throws Exception {
         ApplicationContext applicationContext = http.getSharedObject(ApplicationContext.class);
-        ClientRegistrationRepository clientRegistrationRepository = applicationContext.getBean(ClientRegistrationRepository.class);
+        ClientRegistrationRepository clientRegistrationRepository = null;
+        try {
+            clientRegistrationRepository = applicationContext.getBean(ClientRegistrationRepository.class);
+        } catch (BeansException e) {
+            log.error("You have not config any third party client.", e);
+            return;
+        }
 
         FederatedIdentityAuthenticationEntryPoint authenticationEntryPoint = new FederatedIdentityAuthenticationEntryPoint(this.loginPageUrl, clientRegistrationRepository);
         if (this.authorizationRequestUri != null) {
