@@ -10,9 +10,9 @@
     </parent>
     <groupId>com.jack</groupId>
     <artifactId>authserver</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>authserver</name>
-    <description>基于Spring Security和oauth2的授权服务器</description>
+    <description>基于Spring authorization server的授权服务器</description>
     <properties>
         <java.version>17</java.version>
         <mysql.version>8.0.11</mysql.version>
