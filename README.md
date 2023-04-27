@@ -18,7 +18,7 @@ Authserver 是一个实现了OAuth2.1和OpenID Connect 1.0规范的认证授权�
 这个认证授权框架由三个部分组成：
 
 - 授权服务器：肩负着client、用户认证授权的责任。为client之间互相调用接口提供、解析JWT令牌。实现单点登录功能。开发人员不需要显式调用授权服务器的接口（当然也调用不了，因为access_token是不透明的，没有提供endpoint获取。没有令牌，就不能通过Authorization请求头进行认证访问）。
-- [资源服务器：](https://github.com/1181120299/resource-server)提供自定义用户信息的功能。你可以在资源服务器上开发自己的用户信息、组织架构等任意资源。提供接口给client调用获取数据。
+- [资源服务器：](https://github.com/1181120299/OAuth2-authorization-demo/tree/main/resource-server)提供自定义用户信息的功能。你可以在资源服务器上开发自己的用户信息、组织架构等任意资源。提供接口给client调用获取数据。
 - [client客户端：](https://github.com/1181120299/client-authority)需要在授权服务器页面完成client的注册，才可以接入认证授权等功能。换句话说，要接入一个应用非常简单。你只需要在授权服务的管理页面注册一个client应用，然后将client信息配置在你的Spring boot应用即可完成应用接入。
 
 ![image-20230426173506408](https://jack-image.oss-cn-shenzhen.aliyuncs.com/image/image-20230426173506408.png)
@@ -105,7 +105,7 @@ http://localhost:9000
 
 ### 2.2.1 下载资源服务代码
 
-下载好资源服务代码[resource-server](https://github.com/1181120299/resource-server)，配置授权服务器地址以及client应用信息。如下所示：
+下载好资源服务代码[resource-server](https://github.com/1181120299/OAuth2-authorization-demo/tree/main/resource-server)，配置授权服务器地址以及client应用信息。如下所示：
 
 ```yaml
 jack:
@@ -257,7 +257,7 @@ public class CustomLoginController implements LoginEntryProvider {
 }
 ```
 
-> 提示：登录页是授权服务提供的。如果要自定义，请在你的[授权应用](#2.1 安装授权服务)中提供LoginEntryProvider接口的实现类
+> 提示：登录页是授权服务提供的。如果要自定义，请在你的[授权服务](#2.1 安装授权服务)中提供LoginEntryProvider接口的实现类
 
 ## 3.2 接口返回字段
 
@@ -574,6 +574,8 @@ $.ajax({
 ```
 
 （4）最后一点，目前不支持用户登出功能。虽然Spring Authorization Server在1.0.2版本中，官方提供的demo有登出的配置，但是demo是使用gradle管理依赖的。使用maven从阿里云仓库拉下来的依赖，并没有登出的配置，留待后续完善。
+
+如果你要登出，请关闭浏览器，重新打开。这样虽然session不会过期，但是会给你的cookie分配一个新的JSSIONID，后台拿不到你以前的session，就会重定向到登录页面。
 
 # 七、贡献代码
 
