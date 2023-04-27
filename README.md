@@ -2,6 +2,8 @@
 
 Authserver 是一个实现了OAuth2.1和OpenID Connect 1.0规范的框架。它是在[Spring Authorization Server](https://spring.io/projects/spring-authorization-server)之上完成的，安全、无侵入、支持自定义配置。
 
+你可以在这里下载到完整的demo代码：[OAuth2-authorization-demo](https://github.com/1181120299/OAuth2-authorization-demo)
+
 ## 1.1 框架特性
 
 - **统一登录认证：**所有client都会重定向到authserver的登录页面完成用户认证。在用户认证授权通过后，再重定向回client应用的页面。
