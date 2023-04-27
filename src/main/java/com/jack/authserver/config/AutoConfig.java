@@ -6,6 +6,7 @@ import com.jack.authserver.controller.*;
 import com.jack.authserver.service.impl.CustomUserMqMessageConsumer;
 import com.jack.authserver.service.impl.Oauth2RegisteredClientServiceImpl;
 import com.jack.authserver.service.impl.SpringSecurityUserServiceImpl;
+import com.jack.authserver.task.InitAuthorization;
 import org.mybatis.spring.mapper.MapperScannerConfigurer;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
@@ -44,5 +45,10 @@ public class AutoConfig {
     @Bean
     public SpringSecurityUserServiceImpl springSecurityUserService() {
         return new SpringSecurityUserServiceImpl();
+    }
+
+    @Bean
+    public InitAuthorization initAuthorization() {
+        return new InitAuthorization();
     }
 }
