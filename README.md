@@ -557,7 +557,9 @@ public class DeviceController {
 
 （1）完整的demo代码，你可以在这里下载：[demo链接](https://github.com/1181120299/OAuth2-authorization-demo)
 
-（2）session过期，前端jquery请求302重定向的问题。你可以提供一个全局异常处理器，直接捕获Exception或者Throwable。这样你的接口确保返回http状态码200。然后在你的jquery请求中，增加请求错误时的回调，可以刷新页面，这样就会重定向到登录页面。授权成功后再重定向回到当前页面。示例代码：
+（2）你的client应用，由于单点登录的需要，必须配置server.servlet.context-path。
+
+（3）session过期，前端jquery请求302重定向的问题。你可以提供一个全局异常处理器，直接捕获Exception或者Throwable。这样你的接口确保返回http状态码200。然后在你的jquery请求中，增加请求错误时的回调，可以刷新页面，这样就会重定向到登录页面。授权成功后再重定向回到当前页面。示例代码：
 
 ```javascript
 $.ajax({
@@ -571,7 +573,7 @@ $.ajax({
 })
 ```
 
-（3）最后一点，目前不支持用户登出功能。虽然Spring Authorization Server在1.0.2版本中，官方提供的demo有登出的配置，但是demo是使用gradle管理依赖的。使用maven从阿里云仓库拉下来的依赖，并没有登出的配置，留待后续完善。
+（4）最后一点，目前不支持用户登出功能。虽然Spring Authorization Server在1.0.2版本中，官方提供的demo有登出的配置，但是demo是使用gradle管理依赖的。使用maven从阿里云仓库拉下来的依赖，并没有登出的配置，留待后续完善。
 
 # 七、贡献代码
 
