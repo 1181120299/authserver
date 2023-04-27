@@ -1,6 +1,6 @@
 # 一、概述
 
-Authserver 是一个实现了OAuth2.1和OpenID Connect 1.0规范的框架。它是在[Spring Authorization Server](https://spring.io/projects/spring-authorization-server)之上完成的，安全、无侵入、支持自定义配置。
+Authserver 是一个实现了OAuth2.1和OpenID Connect 1.0规范的认证授权框架。它是在[Spring Authorization Server](https://spring.io/projects/spring-authorization-server)之上完成的，安全、无侵入、支持自定义配置。client应用接入简单方便。授权服务、资源服务、client应用可以部署在不同的服务器，只要网络互通就行。
 
 你可以在这里下载到完整的demo代码：[OAuth2-authorization-demo](https://github.com/1181120299/OAuth2-authorization-demo)
 
@@ -17,9 +17,9 @@ Authserver 是一个实现了OAuth2.1和OpenID Connect 1.0规范的框架。它�
 
 这个认证授权框架由三个部分组成：
 
-- **授权服务器：**肩负着client、用户认证授权的责任。为client之间互相调用接口提供、解析JWT令牌。实现单点登录功能。开发人员不需要显式调用授权服务器的接口（当然也调用不了，因为access_token是不透明的，没有提供endpoint获取。没有令牌，就不能通过Authorization请求头进行认证访问）。
-- **[资源服务器：](https://github.com/1181120299/resource-server)**提供自定义用户信息的功能。你可以在资源服务器上开发自己的用户信息、组织架构等任意资源。提供接口给client调用获取数据。
-- **[client客户端：](https://github.com/1181120299/client-authority)**需要在授权服务器页面完成client的注册，才可以接入认证授权等功能。换句话说，要接入一个应用非常简单。你只需要在授权服务的管理页面注册一个client应用，然后将client信息配置在你的Spring boot应用即可完成应用接入。
+- 授权服务器：肩负着client、用户认证授权的责任。为client之间互相调用接口提供、解析JWT令牌。实现单点登录功能。开发人员不需要显式调用授权服务器的接口（当然也调用不了，因为access_token是不透明的，没有提供endpoint获取。没有令牌，就不能通过Authorization请求头进行认证访问）。
+- [资源服务器：](https://github.com/1181120299/resource-server)提供自定义用户信息的功能。你可以在资源服务器上开发自己的用户信息、组织架构等任意资源。提供接口给client调用获取数据。
+- [client客户端：](https://github.com/1181120299/client-authority)需要在授权服务器页面完成client的注册，才可以接入认证授权等功能。换句话说，要接入一个应用非常简单。你只需要在授权服务的管理页面注册一个client应用，然后将client信息配置在你的Spring boot应用即可完成应用接入。
 
 ![image-20230426173506408](https://jack-image.oss-cn-shenzhen.aliyuncs.com/image/image-20230426173506408.png)
 
@@ -403,8 +403,6 @@ public R requestOtherClient() {
 
 当然，基于可配置的观点，建议由后端进行转发或者重定向，将B应用地址写在配置文件中。
 
-> 注意：单点登录实现的是同域下的单点登录。假如你是通过192.168.1.101访问的A应用。那么跳转到B应用的时候，只有通过192.168.1.101访问B应用，才能保持登录状态。
-
 # 五、自定义权限点
 
 基于OAuth2协议，假设B应用有一个foo()方法，如下所示：
@@ -573,13 +571,11 @@ $.ajax({
 })
 ```
 
-（3）最后，也是非常重要的一点，算是留下的一个坑。目前只支持单机部署。换句话说，授权服务、资源服务、client应用。必须运行在同一台机器。但是应用使用到的组件（例如：RabbitMQ、Redis、mysql等）可以部署在别的机器上。
-
-（4）其实还有一点，目前不支持用户登出功能。虽然Spring Authorization Server在1.0.2版本中，官方提供的demo有登出的配置，但是demo是使用gradle管理依赖的。使用maven从阿里云仓库拉下来的依赖，并没有登出的配置，留待后续完善。
+（3）最后一点，目前不支持用户登出功能。虽然Spring Authorization Server在1.0.2版本中，官方提供的demo有登出的配置，但是demo是使用gradle管理依赖的。使用maven从阿里云仓库拉下来的依赖，并没有登出的配置，留待后续完善。
 
 # 七、贡献代码
 
-欢迎[Pull requests](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request)，或者通过Issues报告bug，提出你的优化建议等。
+欢迎[Pull requests](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request)，或者通过Issues报告bug，提出你的优化建议或者分享你的idea。
 
 # 八、许可
 
