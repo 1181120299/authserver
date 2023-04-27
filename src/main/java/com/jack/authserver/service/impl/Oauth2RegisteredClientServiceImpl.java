@@ -34,7 +34,7 @@ public class Oauth2RegisteredClientServiceImpl extends ServiceImpl<Oauth2Registe
         log.info("Init one client for resource server.");
         Oauth2RegisteredClient entity = new Oauth2RegisteredClient();
         entity.setClientId("resource-server");
-        entity.setRedirectUriSimple("http://192.168.1.101:9001");
+        entity.setRedirectUriSimple("http://192.168.1.101:9001/resource");
         entity.setRedirectUris(generateRedirectUris(entity.getRedirectUriSimple()));
         entity.setClientIdIssuedAt(new Date());
         entity.setClientSecret("{noop}secret");
@@ -56,6 +56,8 @@ public class Oauth2RegisteredClientServiceImpl extends ServiceImpl<Oauth2Registe
             throw new RRException("应用名称已存在");
         }
 
+        // 要求应用必须设置server.servlet.contextPath，否则单点登录会有问题。
+        checkSimpleRedirectUri(entity.getRedirectUriSimple());
 
         entity.setRedirectUris(generateRedirectUris(entity.getRedirectUriSimple()));
         entity.setClientIdIssuedAt(new Date());
@@ -68,6 +70,39 @@ public class Oauth2RegisteredClientServiceImpl extends ServiceImpl<Oauth2Registe
         entity.setTokenSettings("{\"@class\":\"java.util.Collections$UnmodifiableMap\",\"settings.token.reuse-refresh-tokens\":true,\"settings.token.id-token-signature-algorithm\":[\"org.springframework.security.oauth2.jose.jws.SignatureAlgorithm\",\"RS256\"],\"settings.token.access-token-time-to-live\":[\"java.time.Duration\",300.000000000],\"settings.token.access-token-format\":{\"@class\":\"org.springframework.security.oauth2.server.authorization.settings.OAuth2TokenFormat\",\"value\":\"self-contained\"},\"settings.token.refresh-token-time-to-live\":[\"java.time.Duration\",3600.000000000],\"settings.token.authorization-code-time-to-live\":[\"java.time.Duration\",300.000000000]}");
 
         return baseMapper.insert(entity) > 0;
+    }
+
+    /**
+     * 检查回调地址是否合法。
+     * <p></p>
+     *
+     * 合法的地址示例：http://192.168.1.101:8080/myApp
+     * <p></p>
+     *
+     * 由于单点登录的原因，myApp（应用上下文。即server.servlet.contextPath）是必要的。
+     * <p></p>
+     *
+     * @param uri   回调地址
+     * @throws RRException  如果回调地址非法
+     */
+    private void checkSimpleRedirectUri(String uri) {
+        if (!StringUtils.hasText(uri)) {
+            return;
+        }
+
+        if (uri.contains("127.0.0.1")) {
+            throw new RRException("回调地址不能是127.0.0.1");
+        }
+
+        if (uri.toLowerCase().contains("localhost")) {
+            throw new RRException("回调地址不能是localhost");
+        }
+
+       String regex = ".*\\d+\\.\\d+\\.\\d+\\.\\d+(:\\d+)?/.+";
+       if (!uri.matches(regex)) {
+           log.debug("Invalid redirect uri: {}", uri);
+           throw new RRException("回调地址格式不正确。正确格式示例：http://192.168.1.101:8080/myApp");
+       }
     }
 
     private String generateRedirectUris(String simple) {
@@ -91,6 +126,7 @@ public class Oauth2RegisteredClientServiceImpl extends ServiceImpl<Oauth2Registe
             entity.setClientSecret(clientSecret);
         }
 
+        checkSimpleRedirectUri(entity.getRedirectUriSimple());
         entity.setRedirectUris(generateRedirectUris(entity.getRedirectUriSimple()));
         return baseMapper.updateById(entity) > 0;
     }
