@@ -10,7 +10,7 @@
 </head>
 <body>
 <div class="container">
-    <form class="form-signin" method="post" th:action="@{/login}">
+    <form id="usernameForm" class="form-signin" method="post" th:action="@{/login}">
         <div th:if="${param.error}" class="alert alert-danger" role="alert">
             Invalid username or password.
         </div>
@@ -35,7 +35,51 @@
             <img width="24" style="margin-right: 5px;" alt="Sign in with GitHub" src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" />
             Sign in with Github
         </a>
+        <a loginType="username" class="btn btn-light btn-block bg-info" href="javascript:void(0);" onclick="changeLoginType(this)" role="link" style="text-transform: none;">
+            手机号登录
+        </a>
+    </form>
+    <form id="phoneForm" class="form-signin" method="post" th:action="@{/phone/login}" style="display: none">
+        <div th:if="${param.error}" class="alert alert-danger" role="alert">
+            验证码错误.
+        </div>
+        <div th:if="${param.logout}" class="alert alert-success" role="alert">
+            You have been logged out.
+        </div>
+        <h2 class="form-signin-heading">Sign In</h2>
+        <p>
+            <label for="phone" class="sr-only">Phone</label>
+            <input type="text" id="phone" name="phone" class="form-control" placeholder="Phone" required autofocus>
+        </p>
+        <p>
+            <label for="num" class="sr-only">Password</label>
+            <input type="text" id="num" name="num" class="form-control" placeholder="Verification code" required>
+        </p>
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+        <a class="btn btn-light btn-block bg-info" th:href="@{/oauth2/authorization/github-idp}" role="link" style="text-transform: none;">
+            <img width="24" style="margin-right: 5px;" alt="Sign in with GitHub" src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" />
+            Sign in with Github
+        </a>
+        <a loginType="phone" class="btn btn-light btn-block bg-info" href="javascript:void(0);" onclick="changeLoginType(this)" role="link" style="text-transform: none;">
+            用户名密码登录
+        </a>
     </form>
 </div>
+
+<script src="/webjars/jquery/jquery.min.js" th:src="@{/webjars/jquery/jquery.min.js}"></script>
+<script>
+    function changeLoginType(obj) {
+        const loginType = $(obj).attr("loginType");
+        if ("username" === loginType) {
+            console.debug("切换到手机号登录");
+            $('#phoneForm').css("display", "");
+            $('#usernameForm').css("display", "none");
+        } else {
+            console.debug("切换到用户名密码登录");
+            $('#phoneForm').css("display", "none");
+            $('#usernameForm').css("display", "");
+        }
+    }
+</script>
 </body>
 </html>
