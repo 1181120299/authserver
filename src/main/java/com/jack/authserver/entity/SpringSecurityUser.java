@@ -3,6 +3,8 @@ package com.jack.authserver.entity;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,6 +27,8 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @TableName("users")
+@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class SpringSecurityUser implements Serializable, UserDetails {
 
 	/**
