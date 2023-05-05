@@ -9,3 +9,4 @@ com.jack.authserver.controller.LoginController
 com.jack.authserver.controller.Oauth2RegisteredClientController
 com.jack.authserver.controller.RootController
 com.jack.authserver.controller.SpringSecurityUserController
+com.jack.authserver.controller.PhoneController

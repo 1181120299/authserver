@@ -1,7 +1,9 @@
 package com.jack.authserver.config;
 
+import com.jack.authserver.annotation.AliSmsProvider;
 import com.jack.authserver.annotation.FixedResponseProcessor;
 import com.jack.authserver.annotation.LoginEntryProvider;
+import com.jack.authserver.annotation.SmsProvider;
 import com.jack.authserver.controller.*;
 import com.jack.authserver.service.impl.CustomUserMqMessageConsumer;
 import com.jack.authserver.service.impl.Oauth2RegisteredClientServiceImpl;
@@ -50,5 +52,11 @@ public class AutoConfig {
     @Bean
     public InitAuthorization initAuthorization() {
         return new InitAuthorization();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean(SmsProvider.class)
+    public AliSmsProvider aliSmsProvider() {
+        return new AliSmsProvider();
     }
 }
