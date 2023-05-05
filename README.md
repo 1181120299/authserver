@@ -6,12 +6,13 @@ Authserver 是一个实现了OAuth2.1和OpenID Connect 1.0规范的认证授权�
 
 ## 1.1 框架特性
 
-- **统一登录认证：**所有client都会重定向到authserver的登录页面完成用户认证。在用户认证授权通过后，再重定向回client应用的页面。
-- **单点登录：**用户登录任意一个client之后，无需登录即可访问在authserver注册的任何一个client。
-- **自定义用户字段：**你可以在resource server中定义任何你需要的用户字段，在client中都可以拿到用户信息。
-- **自定义权限点：**可以在client应用的方法上定义权限点，要求登录的用户拥有此权限点才可以访问该方法。
-- **提供管理页面：**可以通过页面完成client应用的注册、用户授权等操作。
-- **支持第三方授权**：可以使用github授权登录。
+- 统一登录认证：所有client都会重定向到authserver的登录页面完成用户认证。在用户认证授权通过后，再重定向回client应用的页面。
+- 单点登录：用户登录任意一个client之后，无需登录即可访问在authserver注册的任何一个client。
+- 自定义用户字段：你可以在resource server中定义任何你需要的用户字段，在client中都可以拿到用户信息。
+- 自定义权限点：可以在client应用的方法上定义权限点，要求登录的用户拥有此权限点才可以访问该方法。
+- 提供管理页面：可以通过页面完成client应用的注册、用户授权等操作。
+- 支持第三方授权：可以使用github授权登录。
+- 手机号登录：支持手机号验证码登录方式（since v1.1.0）
 
 ## 1.2 框架组成
 
@@ -89,7 +90,27 @@ jack:
 
 > 提示：当你不确定有哪些配置项时，输入jack会有所帮助。
 
-### 2.1.5 启动应用
+### 2.1.5 手机号登录
+
+v1.1.0版本增加了手机号验证码登录功能。验证码默认使用阿里云的SMS服务发送到手机。可以通过以下配置项，配置阿里云短信模板信息：
+
+```yaml
+jack:
+  sms:
+    login:
+      sign-name: 陈家宝假发批发网
+      template-code: SMS_203726046
+      template-param: code
+```
+
+出于安全考虑，阿里云的AK（accessKey）信息通过环境变量的方式进行配置。需要在你的电脑上配置以下两个环境变量：
+
+- ALIBABA_CLOUD_ACCESS_KEY_ID
+- ALIBABA_CLOUD_ACCESS_KEY_SECRET
+
+如果你不使用阿里云SMS，有另外的短信提供商。可以提供`com.jack.authserver.annotation.SmsProvider`接口的实现类，并且注册为Spring bean。
+
+### 2.1.6 启动应用
 
 假设你的server.port = 9000，并且没有配置server.servlet.context-path。应用启动后，你可以通过如下示例的链接访问授权服务提供的client管理页面：
 
