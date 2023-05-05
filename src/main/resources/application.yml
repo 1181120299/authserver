@@ -5,19 +5,3 @@ spring:
     url: jdbc:mysql://127.0.0.1:3306/demo_auth_server?useUnicode=true&characterEncoding=utf8&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=GMT%2B8
     username: root
     password: test123456
-
-#  security:
-#    oauth2:
-#      client:
-#        provider:
-#          github:
-#            user-name-attribute: login
-#        registration:
-#          github-idp:
-#            provider: github
-#            client-id: ${jack.oauth2.github.client-id:your id}
-#            client-secret: ${jack.oauth2.github.client-secret:your secret}
-#            scope:
-#              - user:email
-#              - read:user
-#            client-name: Github sign in

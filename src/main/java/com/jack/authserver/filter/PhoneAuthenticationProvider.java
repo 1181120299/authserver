@@ -7,6 +7,7 @@ import com.jack.authserver.mapper.AuthoritiesMapper;
 import com.jack.authserver.mapper.SpringSecurityUserMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,6 +21,10 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
+import static com.jack.authserver.controller.PhoneController.PREFIX_LOGIN_CODE;
+import static com.jack.authserver.controller.PhoneController.PREFIX_LOGIN_SEND_TIMES;
 
 /**
  * 主要实现 authenticate 方法，写我们自己的认证逻辑
@@ -30,6 +35,8 @@ public class PhoneAuthenticationProvider implements AuthenticationProvider {
     private SpringSecurityUserMapper springSecurityUserMapper;
     @Autowired
     private AuthoritiesMapper authoritiesMapper;
+    @Autowired
+    private RedisTemplate redisTemplate;
 
     /**
      * 手机号、验证码的认证逻辑
@@ -41,23 +48,26 @@ public class PhoneAuthenticationProvider implements AuthenticationProvider {
         PhoneNumAuthenticationToken token = (PhoneNumAuthenticationToken) authentication;
         String phone = (String) authentication.getPrincipal();// 获取手机号
         String num = (String) authentication.getCredentials(); // 获取输入的验证码
-        // 1. 从 session 中获取验证码
-        HttpServletRequest req = ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes()).getRequest();
-        String phoneNum = (String) req.getSession().getAttribute("phoneNum");
-        if (!StringUtils.hasText(phoneNum)) {
-            throw new BadCredentialsException("验证码已经过期，请重新发送验证码");
+        // 1. 从 redis 中获取验证码
+        Object phoneNumObj = redisTemplate.opsForValue().get(PREFIX_LOGIN_CODE + phone);
+        if (Objects.isNull(phoneNumObj)) {
+            throw new BadCredentialsException(PhoneLoginStatus.EXPIRE);
         }
 
+        String phoneNum = phoneNumObj.toString();
         if (!phoneNum.equals(num)) {
-            throw new BadCredentialsException("验证码不正确");
+            throw new BadCredentialsException(PhoneLoginStatus.INVALID);
         }
 
         // 2. 根据手机号查询用户信息
         SpringSecurityUser loginUser = springSecurityUserMapper.selectOne(new LambdaQueryWrapper<SpringSecurityUser>()
                 .eq(SpringSecurityUser::getPhone, phone));
         if (loginUser == null) {
-            throw new BadCredentialsException("用户不存在，请注册");
+            throw new BadCredentialsException(PhoneLoginStatus.USER_NOT_EXIST);
         }
+
+        redisTemplate.delete(PREFIX_LOGIN_CODE + phone);
+        redisTemplate.delete(PREFIX_LOGIN_SEND_TIMES + phone);
 
         List<Authorities> authoritiesList = authoritiesMapper.selectList(new LambdaQueryWrapper<Authorities>()
                 .eq(Authorities::getUsername, loginUser.getUsername()));
@@ -75,8 +85,8 @@ public class PhoneAuthenticationProvider implements AuthenticationProvider {
      * 判断是上面 authenticate 方法的 authentication 参数，是哪种类型
      * Authentication 是个接口，实现类有很多，目前我们最熟悉的就是 PhoneNumAuthenticationToken、UsernamePasswordAuthenticationToken
      * 很明显，我们只支持 PhoneNumAuthenticationToken，因为它封装的是手机号、验证码
-     * @param authentication
-     * @return
+     * @param authentication    认证类型
+     * @return  true：支持
      */
     @Override
     public boolean supports(Class<?> authentication) {

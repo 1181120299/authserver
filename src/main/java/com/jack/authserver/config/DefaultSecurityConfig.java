@@ -163,7 +163,7 @@ public class DefaultSecurityConfig {
         filter.setAuthenticationSuccessHandler(new SavedRequestAwareAuthenticationSuccessHandler());
         filter.setAuthenticationFailureHandler(((request, response, exception) -> {
             DefaultRedirectStrategy redirectStrategy = new DefaultRedirectStrategy();
-            String url = "/login?loginType=phone&error";
+            String url = "/login?loginType=phone&error=" + exception.getMessage();
             redirectStrategy.sendRedirect(request, response, url);
         }));
 

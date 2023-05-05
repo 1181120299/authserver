@@ -7,6 +7,12 @@
     <title>Spring Security Example</title>
     <link rel="stylesheet" href="/webjars/bootstrap/css/bootstrap.css" th:href="@{/webjars/bootstrap/css/bootstrap.css}" />
     <link href="https://getbootstrap.com/docs/4.0/examples/signin/signin.css" rel="stylesheet" crossorigin="anonymous"/>
+    <style>
+        #num{
+            width: 80%;
+            display: inline;
+        }
+    </style>
 </head>
 <body>
 <div class="container">
@@ -40,8 +46,15 @@
         </a>
     </form>
     <form id="phoneForm" class="form-signin" method="post" th:action="@{/phone/login}" style="display: none">
-        <div th:if="${param.error}" class="alert alert-danger" role="alert">
-            验证码错误.
+        <!--这里有个坑：从url获取的参数，带有空格-->
+        <div th:if="${#strings.trim(param.error)} == 'EXPIRE'" class="alert alert-danger" role="alert">
+            验证码已过期，请重新发送验证码
+        </div>
+        <div th:if="${#strings.trim(param.error)} eq 'INVALID'" class="alert alert-danger" role="alert">
+            验证码不正确
+        </div>
+        <div th:if="${#strings.trim(param.error)} eq 'USER_NOT_EXIST'" class="alert alert-danger" role="alert">
+            用户不存在，请注册
         </div>
         <div th:if="${param.logout}" class="alert alert-success" role="alert">
             You have been logged out.
@@ -53,7 +66,8 @@
         </p>
         <p>
             <label for="num" class="sr-only">Password</label>
-            <input type="text" id="num" name="num" class="form-control" placeholder="Verification code" required>
+            <input type="text" id="num" name="num" class="form-control" placeholder="Verification code" required autocomplete="off">
+            <button class="btn btn-default" type="button" id="sendBtn" onclick="sendVerificationCode()">发送</button>
         </p>
         <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
         <a class="btn btn-light btn-block bg-info" th:href="@{/oauth2/authorization/github-idp}" role="link" style="text-transform: none;">
@@ -65,9 +79,28 @@
         </a>
     </form>
 </div>
+<a id="ctx" style="display: none" th:href="@{/}"></a>
 
 <script src="/webjars/jquery/jquery.min.js" th:src="@{/webjars/jquery/jquery.min.js}"></script>
 <script>
+    const ctx = $('#ctx').attr("href");
+    console.log("ctx = ", ctx);
+
+    // 返回参数map
+    function getParameterMap() {
+        let parameters = window.location.search;
+        let map = new Map;
+        // 如果没有参数
+        if (parameters.indexOf("?") === -1) return map;
+        let strs = parameters.substr(1).split("&");
+        for (let i = 0; i < strs.length; i++) {
+            let str = strs[i].split("=");
+            map.set(str[0], str[1]);
+        }
+
+        return map;
+    }
+
     function changeLoginType(obj) {
         const loginType = $(obj).attr("loginType");
         if ("username" === loginType) {
@@ -80,6 +113,54 @@
             $('#usernameForm').css("display", "");
         }
     }
+
+    function sendVerificationCode() {
+        const phone = $('#phone').val();
+        const regex = /^1[3456789]\d{9}$/;
+        if (!regex.test(phone)) {
+            alert("请输入有效的手机号");
+            return;
+        }
+
+        // 禁用发送按钮一分钟
+        $('#sendBtn').attr("disabled", "disabled");
+
+        $.ajax({
+            type: "GET",
+            url: ctx + "phone/code?phoneNumber=" + phone,
+            error: function () {
+                alert("登录已过期");
+                window.location.reload();
+            },
+            success: function (resp) {
+                if (resp.fixedCode !== 200) {
+                    alert(resp.fixedMsg);
+                    $('#sendBtn').removeAttr("disabled");
+                    return;
+                }
+
+                let count = 60;
+                const timer = setInterval(function () {
+                    count--;
+                    $('#sendBtn').text(count + "s");
+                    if (count <= 0) {
+                        clearInterval(timer);
+                        $('#sendBtn').text("发送");
+                        $('#sendBtn').removeAttr("disabled");
+                    }
+                }, 1000);
+            }
+        })
+    }
+</script>
+<script>
+    $(function () {
+        const loginType = getParameterMap().get("loginType");
+        console.debug("loginType: " + loginType)
+        if ('phone' === loginType) {
+            $('a[loginType="username"]').click();
+        }
+    })
 </script>
 </body>
 </html>
