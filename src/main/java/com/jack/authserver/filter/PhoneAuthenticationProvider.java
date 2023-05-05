@@ -15,6 +15,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.util.StringUtils;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -75,7 +77,11 @@ public class PhoneAuthenticationProvider implements AuthenticationProvider {
         authoritiesList.forEach(authorities -> grantedAuthorityList
                 .add(new SimpleGrantedAuthority(authorities.getAuthority())));
 
-        UsernamePasswordAuthenticationToken authenticationResult = new UsernamePasswordAuthenticationToken(loginUser,
+        UserDetails userDetails = User.withUsername(loginUser.getUsername())
+                .password(loginUser.getPassword())
+                .authorities(grantedAuthorityList)
+                .build();
+        UsernamePasswordAuthenticationToken authenticationResult = new UsernamePasswordAuthenticationToken(userDetails,
                 loginUser.getPassword(), grantedAuthorityList);
         authenticationResult.setDetails(token.getDetails());
         return authenticationResult;

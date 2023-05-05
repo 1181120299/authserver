@@ -14,6 +14,7 @@ import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
+import org.springframework.util.ReflectionUtils;
 
 /**
  * 处理自定义用户数据
@@ -109,7 +110,9 @@ public class CustomUserMqMessageConsumer {
             throw new IllegalArgumentException("Invalid username: " + EMBED_USERNAME);
         }
 
-        if (user.getPassword() != null || user.getEnabled() != null) {
+        if (user.getPassword() != null
+                || user.getEnabled() != null
+                || user.getPhone() != null) {
             springSecurityUserMapper.updateById(user);
         }
 

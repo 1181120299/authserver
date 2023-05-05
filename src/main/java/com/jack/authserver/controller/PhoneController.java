@@ -66,9 +66,4 @@ public class PhoneController {
         redisTemplate.opsForValue().set(PREFIX_LOGIN_SEND_TIMES + phoneNumber, 1, Duration.ofSeconds(60));
         return R.ok("发送成功").setData(code);
     }
-
-    @PostMapping("/login")
-    public String phoneLogin() {
-        return "===================phoneLogin";
-    }
 }

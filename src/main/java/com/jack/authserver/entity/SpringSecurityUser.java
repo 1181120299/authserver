@@ -1,17 +1,12 @@
 package com.jack.authserver.entity;
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonTypeInfo;
 import lombok.*;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.Set;
 
 /**
  * Spring Security 需要的用户信息
@@ -27,9 +22,7 @@ import java.util.Set;
 @AllArgsConstructor
 @NoArgsConstructor
 @TableName("users")
-@JsonTypeInfo(use = JsonTypeInfo.Id.CLASS)
-@JsonIgnoreProperties(ignoreUnknown = true)
-public class SpringSecurityUser implements Serializable, UserDetails {
+public class SpringSecurityUser implements Serializable {
 
 	/**
 	 * 用户名
@@ -51,30 +44,4 @@ public class SpringSecurityUser implements Serializable, UserDetails {
 	 * 手机号，不允许重复
 	 */
 	private String phone;
-
-	/**
-	 * 授予的应用权限
-	 */
-	@TableField(exist = false)
-	private Set<GrantedAuthority> authorities;
-
-	@Override
-	public boolean isAccountNonExpired() {
-		return true;
-	}
-
-	@Override
-	public boolean isAccountNonLocked() {
-		return true;
-	}
-
-	@Override
-	public boolean isCredentialsNonExpired() {
-		return true;
-	}
-
-	@Override
-	public boolean isEnabled() {
-		return enabled;
-	}
 }
