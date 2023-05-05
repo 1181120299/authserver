@@ -110,6 +110,8 @@ jack:
 
 如果你不使用阿里云SMS，有另外的短信提供商。可以提供`com.jack.authserver.annotation.SmsProvider`接口的实现类，并且注册为Spring bean。
 
+> 注意：手机号登录功能，依赖于Redis。请确保你已经安装了Redis，并配置好Redis连接信息。
+
 ### 2.1.6 启动应用
 
 假设你的server.port = 9000，并且没有配置server.servlet.context-path。应用启动后，你可以通过如下示例的链接访问授权服务提供的client管理页面：
