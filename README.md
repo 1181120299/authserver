@@ -28,10 +28,10 @@ Authserver 是一个实现了OAuth2.1和OpenID Connect 1.0规范的认证授权�
 
 **环境要求：**
 
-- JDK17 要求JDK版本至少是17，或者更高。
-- Spring boot 3.0.0 要求spring-boot-starter-parent 版本至少是3.0.0，或者更高。
+- JDK17+
+- Spring boot 3.0.0+
 - RabbitMQ Server 3.9.11
-- Redis（可选）
+- Redis 2.8+
 - mysql 8.0.30
 
 ## 2.1 安装授权服务
@@ -112,7 +112,20 @@ jack:
 
 > 注意：手机号登录功能，依赖于Redis。请确保你已经安装了Redis，并配置好Redis连接信息。
 
-### 2.1.6 启动应用
+### 2.1.6 记住我
+
+在1.2.0版本后，用户名密码登录支持“记住我”功能。默认有效期：一周。表示两次访问系统的时间间隔，如果在一周之内，则不需要再次登录。
+
+你可以通过以下的配置项，设置"记住我"的有效周期，以及登录表单中"记住我"字段的名称：
+
+```yaml
+jack:
+  remember-me:
+    validity-seconds: 604800
+    parameter-name: remember-me
+```
+
+### 2.1.7 启动应用
 
 假设你的server.port = 9000，并且没有配置server.servlet.context-path。应用启动后，你可以通过如下示例的链接访问授权服务提供的client管理页面：
 

@@ -8,6 +8,7 @@ import com.jack.authserver.security.UserRepositoryOAuth2UserHandler;
 import com.jack.authserver.service.impl.CustomUserMqMessageConsumer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -22,7 +23,6 @@ import org.springframework.security.core.session.SessionRegistry;
 import org.springframework.security.core.session.SessionRegistryImpl;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -40,7 +40,9 @@ import org.springframework.security.web.context.HttpSessionSecurityContextReposi
 import org.springframework.security.web.context.RequestAttributeSecurityContextRepository;
 import org.springframework.security.web.context.SecurityContextRepository;
 import org.springframework.security.web.session.HttpSessionEventPublisher;
+import org.springframework.session.security.web.authentication.SpringSessionRememberMeServices;
 import org.springframework.util.ReflectionUtils;
+import org.springframework.util.StringUtils;
 
 import javax.sql.DataSource;
 import java.lang.reflect.Field;
@@ -68,8 +70,35 @@ public class DefaultSecurityConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .apply(federatedIdentityConfigurer);
 
+        http
+                .rememberMe((rememberMe -> rememberMe
+                        .rememberMeServices(rememberMeServices()))
+                );
+
         addPhoneLoginFilter(http);
         return http.build();
+    }
+
+    @Value("${jack.remember-me.validity-seconds:604800}")
+    private Integer sessionValiditySeconds;
+
+    @Value("${jack.remember-me.parameter-name:}")
+    private String rememberMeParameterName;
+
+    /**
+     * 记住我 功能的service实现类
+     * @since 1.2.0
+     */
+    @Bean
+    public SpringSessionRememberMeServices rememberMeServices() {
+        SpringSessionRememberMeServices rememberMeServices = new SpringSessionRememberMeServices();
+        //rememberMeServices.setAlwaysRemember(true);
+        rememberMeServices.setValiditySeconds(sessionValiditySeconds);
+        if (StringUtils.hasText(rememberMeParameterName)) {
+            rememberMeServices.setRememberMeParameterName(rememberMeParameterName);
+        }
+
+        return rememberMeServices;
     }
 
     // 添加手机号登录的支持

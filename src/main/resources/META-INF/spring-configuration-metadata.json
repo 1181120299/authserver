@@ -8,6 +8,11 @@
     "name": "jack.sms.login",
     "type": "",
     "sourceType": ""
+  },
+  {
+    "name": "jack.remember-me",
+    "type": "",
+    "sourceType": ""
   }
 ],"properties": [
   {
@@ -44,5 +49,19 @@
     "sourceType": "",
     "description": "短信模板参数名称.",
     "defaultValue": "code"
+  },
+  {
+    "name": "jack.remember-me.validity-seconds",
+    "type": "java.lang.Integer",
+    "sourceType": "",
+    "description": "\"记住我\"的有效周期，即session的过期时间，默认一周，单位：秒.",
+    "defaultValue": "604800"
+  },
+  {
+    "name": "jack.remember-me.parameter-name",
+    "type": "java.lang.String",
+    "sourceType": "",
+    "description": "\"记住我\"参数名称，即登录表单中\"记住我\"的字段name.",
+    "defaultValue": "remember-me"
   }
 ]}
