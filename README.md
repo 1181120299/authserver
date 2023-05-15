@@ -351,7 +351,7 @@ public class NoopClientAccessUserNameStrategy implements ClientAccessUsernameStr
 
 ## 3.4 client应用主页
 
-在用户完成登录后，会重定向会应用主页。默认由`com.jack.clientauthority.annotation.defaultImpl.DefaultHomePageController`类提供实现。它会输出一句话：请提供HomePageProvider的实现类，定义应用主页。
+在用户完成登录后，会重定向回到应用主页。默认由`com.jack.clientauthority.annotation.defaultImpl.DefaultHomePageController`类提供实现。它会输出一句话：请提供HomePageProvider的实现类，定义应用主页。
 
 你可以提供`HomePageProvider`接口的实现类，返回主页的模板，或者重定向到你的主页中。
 
@@ -478,7 +478,7 @@ http://192.168.1.101:8080/client-first/appConfig
 
 ![image-20230426235319898](https://jack-image.oss-cn-shenzhen.aliyuncs.com/image/image-20230426235319898.png)
 
-## 5.1 配置应用菜单
+## 5.1 菜单配置
 
 配置应用的菜单，主要是配置菜单编码，然后给到前端，用于控制菜单项是否显示。页面如下所示：
 
