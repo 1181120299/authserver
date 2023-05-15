@@ -64,6 +64,6 @@ public class PhoneController {
         redisTemplate.opsForValue().set(PREFIX_LOGIN_CODE + phoneNumber, code,
                 Duration.of(5, ChronoUnit.MINUTES));
         redisTemplate.opsForValue().set(PREFIX_LOGIN_SEND_TIMES + phoneNumber, 1, Duration.ofSeconds(60));
-        return R.ok("发送成功").setData(code);
+        return R.ok("发送成功");
     }
 }
